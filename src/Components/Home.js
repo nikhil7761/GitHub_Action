@@ -8,7 +8,7 @@ function Home() {
     
       
       <div className="home-content container">
-        <h1>Welcome to Niks Finance Limited</h1>
+        <h1>Welcome to Niks Limited Bank</h1>
         <p>
           SBI Bank, formally known as the State Bank of India, is the largest public sector bank in India.
           Established in 1955, SBI has a rich heritage and a wide array of banking products and services
