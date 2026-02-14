@@ -29,20 +29,30 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # Build Docker image using existing Dockerfile
+      # Set image tag using Git commit SHA
+      - name: Set image tag
+        run: echo "IMAGE_TAG=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+      # Build Docker image
       - name: Build Docker image
         run: |
-          docker build -t sbiapplication:1.0 -f Dockerfile .
+          docker build \
+          -t sbiapplication:${IMAGE_TAG} \
+          -f Dockerfile .
 
-      
+      # Tag Docker image (commit tag + latest)
       - name: Tag Docker image
         run: |
-          docker tag sbiapplication:1.0 \
+          docker tag sbiapplication:${IMAGE_TAG} \
+          ${{ secrets.DOCKERHUB_USERNAME }}/sbiapplication:${IMAGE_TAG}
+
+          docker tag sbiapplication:${IMAGE_TAG} \
           ${{ secrets.DOCKERHUB_USERNAME }}/sbiapplication:latest
 
-      # Push Docker image to DockerHub
-      - name: Push Docker image to DockerHub
+      # Push Docker images to DockerHub
+      - name: Push Docker images
         run: |
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/sbiapplication:${IMAGE_TAG}
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/sbiapplication:latest
 
       # Notify pipeline end
