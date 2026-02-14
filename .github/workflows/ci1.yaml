@@ -1,0 +1,21 @@
+name: Assignment CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Notify pipeline start
+        run: echo "CI/CD pipeline started – Slack/Email notification"
+
+      - name: Notify pipeline end
+        if: always()
+        run: echo "CI/CD pipeline finished – Slack/Email notification"
