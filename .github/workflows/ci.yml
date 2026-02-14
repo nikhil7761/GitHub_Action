@@ -1,4 +1,4 @@
-name: Assignment CI/CD Pipeline
+name: React CI Pipeline - DockerHub
 
 on:
   push:
@@ -10,19 +10,41 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout source code
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # Notify pipeline start
       - name: Notify pipeline start
-        run: echo "CI/CD pipeline started – notification sent"
+        run: echo "CI Pipeline Started 🚀"
 
+      # Set up Docker Buildx
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      # Login to DockerHub
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # Build Docker image using existing Dockerfile
       - name: Build Docker image
         run: |
-          docker build -t sbiapplication:1.0 .
+          docker build -t sbiapplication:1.0 -f DockerfileReact_Nginx .
 
+      # Tag Docker image for DockerHub
+      - name: Tag Docker image
+        run: |
+          docker tag sbiapplication:1.0 \
+          ${{ secrets.DOCKERHUB_USERNAME }}/sbiapplication:latest
+
+      # Push Docker image to DockerHub
+      - name: Push Docker image to DockerHub
+        run: |
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/sbiapplication:latest
+
+      # Notify pipeline end
       - name: Notify pipeline end
-        if: always()
-        run: echo "CI/CD pipeline finished – notification sent"
+        run: echo "CI Pipeline Completed ✅"
