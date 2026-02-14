@@ -16,7 +16,7 @@ jobs:
 
       # Notify pipeline start
       - name: Notify pipeline start
-        run: echo "CI Pipeline Started 🚀"
+        run: echo "CI Pipeline Started"
 
       # Set up Docker Buildx
       - name: Set up Docker Buildx
@@ -47,4 +47,4 @@ jobs:
 
       # Notify pipeline end
       - name: Notify pipeline end
-        run: echo "CI Pipeline Completed ✅"
+        run: echo "CI Pipeline Completed"
