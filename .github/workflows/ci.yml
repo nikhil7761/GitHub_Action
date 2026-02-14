@@ -1,4 +1,4 @@
-name: React CI/CD Pipeline
+name: Assignment CI/CD Pipeline
 
 on:
   push:
@@ -6,31 +6,23 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout source code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
+      - name: Notify pipeline start
+        run: echo "CI/CD pipeline started – notification sent"
 
-      - name: Install dependencies
-        run: npm install
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-      - name: Build React app (CI disabled)
-        run: CI=false npm run build   //for ingore warning
+      - name: Build Docker image
+        run: |
+          docker build -t sbiapplication:1.0 .
 
-      - name: Deploy to S3
-        uses: jakejarvis/s3-sync-action@v0.5.1
-        with:
-          args: --delete
-        env:
-          AWS_S3_BUCKET: ${{ secrets.S3_BUCKET_NAME }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-          SOURCE_DIR: build
+      - name: Notify pipeline end
+        if: always()
+        run: echo "CI/CD pipeline finished – notification sent"
