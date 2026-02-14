@@ -34,7 +34,7 @@ jobs:
         run: |
           docker build -t sbiapplication:1.0 -f Dockerfile .
 
-      # Tag Docker image for DockerHub
+      
       - name: Tag Docker image
         run: |
           docker tag sbiapplication:1.0 \
